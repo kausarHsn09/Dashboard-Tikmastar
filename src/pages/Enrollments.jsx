@@ -1,12 +1,23 @@
 import React, { useState } from "react";
-import Modal from '../components/Modal'
-import TextInput from '../components/TextInput'
-import Hr from '../components/Hr'
-import SelectField from '../components/SelectField'
-import { CiLocationArrow1 } from "react-icons/ci";
+import Modal from "../components/Modal";
+import TextInput from "../components/TextInput";
+import Hr from "../components/Hr";
+import SelectField from "../components/SelectField";
+import EnrollmentCard from "../components/EnrollmentCard";
+import { getData } from "../services/getResouces";
+import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { selectUserToken } from "../features/authSlice";
+import Loader from "../components/Loader";
 const Enrollments = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
+  const userToken = useSelector(selectUserToken);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["enrollments"],
+    queryFn: () => getData(userToken, "enrollments"),
+  });
 
   const options = [
     { value: "pending", label: "Pending" },
@@ -25,61 +36,31 @@ const Enrollments = () => {
     setIsModalOpen(false);
   };
 
+  if (isLoading) return <Loader />;
+  const enrollmentsdata = data?.data;
   return (
     <div>
-       <h2 className="text-2xl mt-10">All the Enrollments</h2>
+      <h2 className="text-2xl mt-10">All the Enrollments</h2>
+      {enrollmentsdata.map((item, index) => (
+        <EnrollmentCard data={item} openModal={openModal} key={index} />
+      ))}
 
-      <div className="flex flex-row drop-shadow-md  bg-white rounded-xl justify-between py-5 px-10 mt-5">
-        <div className="flex flex-row justify-between gap-10">
-          <div>
-            <h1 className="text-xl text-primary font-bold">
-              UI /UX design Course
-            </h1>
-            <h3 className=" ">৳699</h3>
-          </div>
-
-          <div>
-            <h1 className=" text-primary font-bold">Name</h1>
-            <h3 className=" ">Kausar</h3>
-          </div>
-          <div>
-            <h1 className=" text-primary font-bold">Status</h1>
-            <h3 className=" ">Pending</h3>
-          </div>
-          <div>
-            <h1 className=" text-primary font-bold">Bkash</h1>
-            <h3 className=" ">0172569</h3>
-          </div>
-          <div>
-            <h1 className=" text-primary font-bold">Enrolled</h1>
-            <h3 className=" ">06/12/2024 10am</h3>
-          </div>
-        </div>
-
-        <button
-          className="w-[50px] h-[50px] rounded-[100%] border-[1px] border-primary justify-center items-center"
-          onClick={openModal}
-        >
-          <CiLocationArrow1 size={35} />
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <SelectField
+          label={"Select Status"}
+          options={options}
+          value={selectedOption}
+          onChange={handleOptionChange}
+        />
+        <Hr />
+        <TextInput label={"Message"} />
+        <Hr gap={10} />
+        <button className="px-10 bg-primary py-2 rounded-md text-white">
+          Update
         </button>
-
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <SelectField
-            label={"Select Status"}
-            options={options}
-            value={selectedOption}
-            onChange={handleOptionChange}
-          />
-          <Hr />
-          <TextInput label={"Message"} />
-          <Hr gap={10} />
-          <button className="px-10 bg-primary py-2 rounded-md text-white">
-            Update
-          </button>
-        </Modal>
-      </div>
+      </Modal>
     </div>
-  )
-}
+  );
+};
 
-export default Enrollments
+export default Enrollments;

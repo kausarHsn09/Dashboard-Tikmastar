@@ -1,10 +1,19 @@
 import React, { useState } from "react";
 import Modal from '../components/Modal'
 import TextInput from '../components/TextInput'
-
+import {getDataWitoutAuth} from '../services/getResouces'
+import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { selectUserToken } from "../features/authSlice";
+import Loader from "../components/Loader";
 const Courses = () => {
-   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState("");
+
+   const { data, isLoading } = useQuery({
+    queryKey: ["courses"],
+    queryFn: () => getDataWitoutAuth("courses"),
+  });
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -17,6 +26,8 @@ const Courses = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  if(isLoading) return <Loader />;
+  const coursesdata = data?.data
   return (
     <div>
       <div>
@@ -29,11 +40,16 @@ const Courses = () => {
             Create Course
           </button>
         </div>
-
-        <div className="bg-secondary flex flex-row px-10 py-5 rounded-lg justify-between  mt-10">
-          <h3>Ui/ux design</h3>
-          <h4>699</h4>
+         {
+          coursesdata.map((item,index)=>(
+            <div key={index} className="bg-secondary flex flex-row px-10 py-5 rounded-lg justify-between  mt-4">
+          <h3>{item.title}</h3>
+          <h4>{item.price}</h4>
         </div>
+          ))
+         }
+        
+
       </div>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <TextInput
