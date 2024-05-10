@@ -31,7 +31,7 @@ function Sidebar() {
               <p className={` ${checkActive('/enrollments')?'text-primary':'text-textdark'}`}>Enrollments</p>
             </div>
           </NavLink>
-          <NavLink to="/coureses" className="py-2">
+          <NavLink to="/courses" className="py-2">
             <div className="flex flex-row items-center gap-2	">
               <PiChalkboardTeacherLight size={22} color={` ${checkActive('/coureses')?'#7455F7':'#262626'}`}/>
               <p className={` ${checkActive('/coureses')?'text-primary':'text-textdark'}`}>Courses</p>

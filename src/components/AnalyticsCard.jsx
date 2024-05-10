@@ -1,4 +1,4 @@
-import React from "react";
+
 import { PiArrowCircleRightLight } from "react-icons/pi";
 
 const AnalyticsCard = ({ title = "Title" }) => {
