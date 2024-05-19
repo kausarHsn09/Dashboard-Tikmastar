@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 import Modal from "../components/Modal";
 import TextInput from "../components/TextInput";
-import { getDataWitoutAuth } from "../services/getResouces";
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addData } from "../services/postResources";
+import { deleteData } from "../services/deleteResources";
+import { updateData } from "../services/updateDataResources";
 import { useSelector } from "react-redux";
 import { selectUserToken } from "../features/authSlice";
 import Loader from "../components/Loader";
 import { notify } from "../utils/notify";
 import useCourses from "../hooks/useCourses";
+import { RxCross2 } from "react-icons/rx";
 
 const Courses = () => {
   const queryClient = useQueryClient();
   const userToken = useSelector(selectUserToken);
   const { courseLoader, coursesdata } = useCourses();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   //formdata
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -23,7 +25,7 @@ const Courses = () => {
   const [enrollment, setEnrollment] = useState(0);
   const [stars, setStars] = useState(0);
   const [coverImg, setCoverImg] = useState("");
-
+  const [courseId, setCourseId] = useState("");
   const createCourseMutation = useMutation({
     mutationFn: addData,
     onSuccess: async () => {
@@ -35,12 +37,36 @@ const Courses = () => {
     },
   });
 
+  const deleteCourseMutation = useMutation({
+    mutationFn: deleteData,
+    onSuccess: async () => {
+      notify("Course Deleted Successfully");
+      queryClient.invalidateQueries(["courses"]);
+    },
+    onError: () => {
+      notify("Error Deleted Course");
+    },
+  });
+
+  // Update Course Mutation
+  const updateCourseMutation = useMutation({
+    mutationFn: updateData,
+    onSuccess: async () => {
+      notify("Course Updated Successfully");
+      queryClient.invalidateQueries(["courses"]);
+    },
+    onError: () => {
+      notify("Error updating Course");
+    },
+  });
+
   const openModal = () => {
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    resetForm();
   };
 
   const createCourseHandelar = () => {
@@ -60,13 +86,47 @@ const Courses = () => {
     if (title && description && price && stars && coverImg) {
       createCourseMutation.mutate(formdata);
       setIsModalOpen(false);
-      setTitle("");
-      setDescription("");
-      setPrice("");
-      setEnrollment(0);
-      setStars(0);
-      setCoverImg("");
+      resetForm();
     }
+  };
+
+  const deleteDataHandelar = (id) => {
+    const formdata = {
+      token: userToken,
+      endpoint: `courses/${id}`,
+    };
+    if (id) {
+      deleteCourseMutation.mutate(formdata);
+    }
+  };
+
+  const updateCourseHandler = () => {
+    const formdata = {
+      token: userToken,
+      endpoint: `courses/${courseId}`,
+      data: {
+        title,
+        description,
+        price,
+        enrollmentCount: enrollment,
+        stars,
+        coverImage: coverImg,
+      },
+    };
+
+    if (courseId) {
+      updateCourseMutation.mutate(formdata);
+      setIsModalOpen(false);
+    }
+  };
+
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setPrice(0);
+    setEnrollment(0);
+    setStars(0);
+    setCoverImg("");
   };
 
   if (courseLoader) return <Loader />;
@@ -90,6 +150,24 @@ const Courses = () => {
           >
             <h3>{item.title}</h3>
             <h4>{item.price}</h4>
+            <button onClick={() => deleteDataHandelar(item._id)}>
+              <RxCross2 />
+            </button>
+
+            <button
+              onClick={() => {
+                setTitle(item.title);
+                setDescription(item.description);
+                setPrice(item.price);
+                setEnrollment(item.enrollmentCount);
+                setStars(item.stars);
+                setCoverImg(item.coverImage);
+                setCourseId(item._id);
+                openModal();
+              }}
+            >
+              Edit Course
+            </button>
           </div>
         ))}
       </div>
@@ -137,10 +215,10 @@ const Courses = () => {
         />
         <hr className="h-5" />
         <button
-          onClick={createCourseHandelar}
+          onClick={title ? updateCourseHandler : createCourseHandelar}
           className="px-10 bg-primary py-2 rounded-md text-white"
         >
-          Create Course
+          {title ? "Update Course" : "Create Course"}
         </button>
       </Modal>
     </div>
