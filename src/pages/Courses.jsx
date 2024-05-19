@@ -1,23 +1,39 @@
 import React, { useState } from "react";
-import Modal from '../components/Modal'
-import TextInput from '../components/TextInput'
-import {getDataWitoutAuth} from '../services/getResouces'
-import { useQuery } from "@tanstack/react-query";
+import Modal from "../components/Modal";
+import TextInput from "../components/TextInput";
+import { getDataWitoutAuth } from "../services/getResouces";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { addData } from "../services/postResources";
 import { useSelector } from "react-redux";
 import { selectUserToken } from "../features/authSlice";
 import Loader from "../components/Loader";
+import { notify } from "../utils/notify";
+import useCourses from "../hooks/useCourses";
+
 const Courses = () => {
+  const queryClient = useQueryClient();
+  const userToken = useSelector(selectUserToken);
+  const { courseLoader, coursesdata } = useCourses();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [name, setName] = useState("");
+  
+  //formdata
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState(0);
+  const [enrollment, setEnrollment] = useState(0);
+  const [stars, setStars] = useState(0);
+  const [coverImg, setCoverImg] = useState("");
 
-   const { data, isLoading } = useQuery({
-    queryKey: ["courses"],
-    queryFn: () => getDataWitoutAuth("courses"),
+  const createCourseMutation = useMutation({
+    mutationFn: addData,
+    onSuccess: async () => {
+      notify("Course Created Successfully");
+      queryClient.invalidateQueries(["courses"]);
+    },
+    onError: () => {
+      notify("Error creating Course");
+    },
   });
-
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -26,8 +42,35 @@ const Courses = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  if(isLoading) return <Loader />;
-  const coursesdata = data?.data
+
+  const createCourseHandelar = () => {
+    const formdata = {
+      token: userToken,
+      endpoint: "courses",
+      data: {
+        title: title,
+        description: description,
+        price: price,
+        enrollmentCount: enrollment,
+        stars: stars,
+        coverImage: coverImg,
+      },
+    };
+
+    if (title && description && price && stars && coverImg) {
+      createCourseMutation.mutate(formdata);
+      setIsModalOpen(false);
+      setTitle("");
+      setDescription("");
+      setPrice("");
+      setEnrollment(0);
+      setStars(0);
+      setCoverImg("");
+    }
+  };
+
+  if (courseLoader) return <Loader />;
+
   return (
     <div>
       <div>
@@ -40,40 +83,68 @@ const Courses = () => {
             Create Course
           </button>
         </div>
-         {
-          coursesdata.map((item,index)=>(
-            <div key={index} className="bg-secondary flex flex-row px-10 py-5 rounded-lg justify-between  mt-4">
-          <h3>{item.title}</h3>
-          <h4>{item.price}</h4>
-        </div>
-          ))
-         }
-        
-
+        {coursesdata.map((item, index) => (
+          <div
+            key={index}
+            className="bg-secondary flex flex-row px-10 py-5 rounded-lg justify-between  mt-4"
+          >
+            <h3>{item.title}</h3>
+            <h4>{item.price}</h4>
+          </div>
+        ))}
       </div>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <TextInput
-          onChange={handleNameChange}
+          onChange={(e) => setTitle(e.target.value)}
+          value={title}
           label={"Name of Course"}
           type={"text"}
         />
         <hr className="h-2" />
-        <TextInput label={"Descriptions"} type={"text"} />
+        <TextInput
+          onChange={(e) => setDescription(e.target.value)}
+          value={description}
+          label={"Descriptions"}
+          type={"text"}
+        />
         <hr className="h-2" />
-        <TextInput label={"Price"} type={"number"} />
+        <TextInput
+          onChange={(e) => setPrice(e.target.value)}
+          value={price}
+          label={"Price"}
+          type={"number"}
+        />
         <hr className="h-2" />
-        <TextInput label={"Enrollment Count"} type={"number"} />
+        <TextInput
+          onChange={(e) => setEnrollment(e.target.value)}
+          value={enrollment}
+          label={"Enrollment Count"}
+          type={"number"}
+        />
         <hr className="h-2" />
-        <TextInput label={"Stars"} type={"number"} />
+        <TextInput
+          onChange={(e) => setStars(e.target.value)}
+          value={stars}
+          label={"Stars"}
+          type={"number"}
+        />
         <hr className="h-2" />
-        <TextInput label={"Cover Image"} type={"text"} />
+        <TextInput
+          onChange={(e) => setCoverImg(e.target.value)}
+          value={coverImg}
+          label={"Cover Image"}
+          type={"text"}
+        />
         <hr className="h-5" />
-        <button className="px-10 bg-primary py-2 rounded-md text-white">
+        <button
+          onClick={createCourseHandelar}
+          className="px-10 bg-primary py-2 rounded-md text-white"
+        >
           Create Course
         </button>
       </Modal>
     </div>
-  )
-}
+  );
+};
 
-export default Courses
+export default Courses;

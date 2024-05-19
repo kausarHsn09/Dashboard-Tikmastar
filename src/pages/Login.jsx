@@ -1,5 +1,3 @@
-import { Toaster } from 'react-hot-toast';
-
 import { useState } from "react";
 import TextInput from '../components/TextInput'
 import Hr from '../components/Hr'
@@ -59,7 +57,7 @@ const Login = () => {
           </button>
         </div>
       </div>
-      <Toaster />
+      
     </div>
   )
 }

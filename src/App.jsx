@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { selectUserToken, setToken } from "./features/authSlice";
+import { Toaster } from 'react-hot-toast';
 
 import Home from './pages/Home';
 import Enrollments from './pages/Enrollments';
@@ -55,6 +56,7 @@ const App = () => {
         <Route path="/courses" element={<Layout><ProtectedRoute><Courses /></ProtectedRoute></Layout>} />
         <Route path="/login" element={userToken ? <Navigate to="/" /> : <Login />} />
       </Routes>
+      <Toaster/>
     </Router>
   )
 }

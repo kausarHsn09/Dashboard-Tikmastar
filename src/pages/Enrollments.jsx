@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { selectUserToken } from "../features/authSlice";
 import Loader from "../components/Loader";
+
 const Enrollments = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
