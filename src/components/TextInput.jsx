@@ -1,6 +1,6 @@
 import React from "react";
 
-const TextInput = ({ type, label, value, onChange, placeholder }) => {
+const TextInput = ({ type, label, value, onChange, placeholder,disabled=false }) => {
   return (
     <div className="flex flex-col">
       <label>{label}</label>
@@ -11,6 +11,7 @@ const TextInput = ({ type, label, value, onChange, placeholder }) => {
         value={value}
         onChange={onChange} 
         placeholder={placeholder}
+        disabled={disabled}
       />
     </div>
   );

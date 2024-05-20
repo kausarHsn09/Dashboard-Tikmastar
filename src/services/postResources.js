@@ -18,7 +18,7 @@ export const addData = async (formdata) => {
 
 
 export const addDatamultiformd = async (formdata) => {
-  try {
+ 
     const headers = {
       "Content-Type": "multipart/form-data",
       Authorization: "Bearer " + formdata.token,
@@ -27,8 +27,6 @@ export const addDatamultiformd = async (formdata) => {
       headers: headers,
     });
     return response;
-  } catch (error) {
-     console.log(error)
-  }
+ 
 };
 

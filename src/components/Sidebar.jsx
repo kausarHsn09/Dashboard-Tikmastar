@@ -44,12 +44,12 @@ function Sidebar() {
               <p className={` ${checkActive('/courses')?'text-primary':'text-textdark'}`}>Courses</p>
             </div>
           </NavLink>
-          <NavLink to="/videos" className="py-2">
+          {/* <NavLink to="/videos" className="py-2">
             <div className="flex flex-row items-center gap-2	">
               <CiVideoOn size={22} color={` ${checkActive('/videos')?'#7455F7':'#262626'}`}/>
               <p className={` ${checkActive('/videos')?'text-primary':'text-textdark'}`}>Videos</p>
             </div>
-          </NavLink>
+          </NavLink> */}
           <NavLink to="/tutorials" className="py-2">
             <div className="flex flex-row items-center gap-2	">
               <PiVideoBold size={22} color={` ${checkActive('/tutorials')?'#7455F7':'#262626'}`}/>

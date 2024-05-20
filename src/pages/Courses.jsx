@@ -11,6 +11,7 @@ import Loader from "../components/Loader";
 import { notify } from "../utils/notify";
 import useCourses from "../hooks/useCourses";
 import { RxCross2 } from "react-icons/rx";
+import { Link } from "react-router-dom";
 
 const Courses = () => {
   const queryClient = useQueryClient();
@@ -26,6 +27,8 @@ const Courses = () => {
   const [stars, setStars] = useState(0);
   const [coverImg, setCoverImg] = useState("");
   const [courseId, setCourseId] = useState("");
+  const [editMode, setEditMode] = useState(false);
+
   const createCourseMutation = useMutation({
     mutationFn: addData,
     onSuccess: async () => {
@@ -127,6 +130,7 @@ const Courses = () => {
     setEnrollment(0);
     setStars(0);
     setCoverImg("");
+    setEditMode(false)
   };
 
   if (courseLoader) return <Loader />;
@@ -153,6 +157,10 @@ const Courses = () => {
             <button onClick={() => deleteDataHandelar(item._id)}>
               <RxCross2 />
             </button>
+             
+            <Link to={`/course/video/${item._id}`}>
+             Video
+            </Link>
 
             <button
               onClick={() => {
@@ -163,6 +171,7 @@ const Courses = () => {
                 setStars(item.stars);
                 setCoverImg(item.coverImage);
                 setCourseId(item._id);
+                setEditMode(true)
                 openModal();
               }}
             >
@@ -215,10 +224,10 @@ const Courses = () => {
         />
         <hr className="h-5" />
         <button
-          onClick={title ? updateCourseHandler : createCourseHandelar}
+          onClick={editMode ? updateCourseHandler : createCourseHandelar}
           className="px-10 bg-primary py-2 rounded-md text-white"
         >
-          {title ? "Update Course" : "Create Course"}
+          {editMode ? "Update Course" : "Create Course"}
         </button>
       </Modal>
     </div>

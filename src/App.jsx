@@ -6,11 +6,11 @@ import { Toaster } from 'react-hot-toast';
 
 import Home from './pages/Home';
 import Enrollments from './pages/Enrollments';
-import Videos from './pages/Videos';
 import Users from './pages/Users';
 import Tutorials from './pages/Tutorials';
 import Courses from './pages/Courses';
 import Login from './pages/Login';
+import Video from './pages/Video';
 
 import Loader from './components/Loader';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -50,7 +50,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Layout><ProtectedRoute><Home /></ProtectedRoute></Layout>} />
         <Route path="/enrollments" element={<Layout><ProtectedRoute><Enrollments /></ProtectedRoute></Layout>} />
-        <Route path="/videos" element={<Layout><ProtectedRoute><Videos /></ProtectedRoute></Layout>} />
+    
+        <Route path="/course/video/:id" element={<Layout><ProtectedRoute><Video /></ProtectedRoute></Layout>} />
         <Route path="/users" element={<Layout><ProtectedRoute><Users /></ProtectedRoute></Layout>} />
         <Route path="/tutorials" element={<Layout><ProtectedRoute><Tutorials /></ProtectedRoute></Layout>} />
         <Route path="/courses" element={<Layout><ProtectedRoute><Courses /></ProtectedRoute></Layout>} />
