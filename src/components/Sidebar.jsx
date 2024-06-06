@@ -40,7 +40,7 @@ function Sidebar() {
           </NavLink>
           <NavLink to="/courses" className="py-2">
             <div className="flex flex-row items-center gap-2	">
-              <PiChalkboardTeacherLight size={22} color={` ${checkActive('/coureses')?'#7455F7':'#262626'}`}/>
+              <PiChalkboardTeacherLight size={22} color={` ${checkActive('/courses')?'#7455F7':'#262626'}`}/>
               <p className={` ${checkActive('/courses')?'text-primary':'text-textdark'}`}>Courses</p>
             </div>
           </NavLink>

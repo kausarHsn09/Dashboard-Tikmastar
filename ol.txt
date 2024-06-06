@@ -4,7 +4,7 @@ import { RxCross2 } from "react-icons/rx";
 import TextInput from "../components/TextInput";
 import BooleanInput from "../components/BoleanInput";
 import Hr from "../components/Hr";
-import { getData } from "../services/getResouces";
+import { getDataWitoutAuth, getData } from "../services/getResouces";
 import { addData } from "../services/postResources";
 import { deleteData } from "../services/deleteResources";
 import { updateData } from "../services/updateDataResources";
@@ -36,11 +36,6 @@ const Video = () => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["videos"],
     queryFn: () => getData(userToken, `videos/course/${id}`),
-  });
-  // Fetch videos data
-  const { data: courseNamedata, isLoading: courseNameLoader } = useQuery({
-    queryKey: ["courseName"],
-    queryFn: () => getData(userToken, `courses/${id}`),
   });
 
   // Update videos data when fetched
@@ -80,7 +75,6 @@ const Video = () => {
   });
 
   const videosdata = data?.data?.videos;
-  const courseName = courseNamedata?.data?.title;
 
   const handleCheckboxChange = (value) => {
     setIsFree(value);
@@ -161,11 +155,11 @@ const Video = () => {
     setEditVideoId(null);
   };
 
-  if (isLoading || courseNameLoader) return <Loader />;
+  if (isLoading) return <Loader />;
   return (
     <div>
       <div className="flex flex-row justify-between mt-10">
-        <h2 className="text-2xl">{courseName}</h2>
+        <h2 className="text-2xl">{/* Display course title here */}</h2>
         <button
           onClick={() => setIsModalOpen(true)}
           className="bg-primary text-white rounded-md px-10 py-2"
@@ -178,21 +172,18 @@ const Video = () => {
         <h2 className="text-2xl">{error.message}</h2>
       ) : (
         <div className="flex flex-col gap-3 mt-10">
-          {videosdata.map((item, i) => (
-            <div
-              key={i}
-              className="bg-secondary flex flex-row px-10 py-5 rounded-lg justify-between "
-            >
-              <h3>{item.title}</h3>
-              <h4>{item.position}</h4>
-              <div className="flex flex-row gap-3">
-                <button onClick={() => editDataHandler(item)}>Edit</button>
-                <button onClick={() => deleteDataHandler(item._id)}>
-                  <RxCross2 />
-                </button>
-              </div>
+          { videosdata.map((item,i)=>(
+    <div key={i} className="bg-secondary flex flex-row px-10 py-5 rounded-lg justify-between ">
+            <h3>{item.title}</h3>
+            <h4>{item.position}</h4>
+            <div className="flex flex-row gap-3">
+              <button onClick={() => editDataHandler(item)}>Edit</button>
+              <button onClick={() => deleteDataHandler(item._id)}>
+                <RxCross2 />
+              </button>
             </div>
-          ))}
+          </div>
+))}
         </div>
       )}
 
