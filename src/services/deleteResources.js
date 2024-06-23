@@ -1,8 +1,6 @@
 import axios from './axiosConfig'; 
 
 export const deleteData = async (formdata) => {
-  
- 
     const headers = {
       "Content-Type": "application/json",
       Authorization: "Bearer " + formdata.token,

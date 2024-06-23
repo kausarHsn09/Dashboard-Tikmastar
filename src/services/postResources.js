@@ -2,7 +2,7 @@ import axios from './axiosConfig';
 
 export const addData = async (formdata) => {
   
-  try {
+ 
     const headers = {
       "Content-Type": "application/json",
       Authorization: "Bearer " + formdata.token,
@@ -11,9 +11,7 @@ export const addData = async (formdata) => {
       headers: headers,
     });
     return response;
-  } catch (error) {
-    console.log(error)
-  }
+  
 };
 
 

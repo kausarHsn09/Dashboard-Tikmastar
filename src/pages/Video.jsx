@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Modal from "../components/Modal";
 import { RxCross2 } from "react-icons/rx";
+import { FaRegCopy } from "react-icons/fa";
 import TextInput from "../components/TextInput";
 import BooleanInput from "../components/BoleanInput";
 import Hr from "../components/Hr";
@@ -22,6 +23,8 @@ const Video = () => {
 
   // State variables
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
+  const [videoId, setVideoId] = useState("");
   const [isFree, setIsFree] = useState(false);
   const [isPreview, setIsPreview] = useState(false);
   const [title, setTitle] = useState("");
@@ -31,7 +34,7 @@ const Video = () => {
   const [position, setPosition] = useState(0);
   const [editMode, setEditMode] = useState(false);
   const [editVideoId, setEditVideoId] = useState(null);
-
+  console.log(videoId);
   // Fetch videos data
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["videos"],
@@ -42,8 +45,6 @@ const Video = () => {
     queryKey: ["courseName"],
     queryFn: () => getData(userToken, `courses/${id}`),
   });
-
-  // Update videos data when fetched
 
   // Other functions for CRUD operations
   const createVideoMutation = useMutation({
@@ -73,6 +74,8 @@ const Video = () => {
     onSuccess: async () => {
       notify("Video Deleted Successfully");
       queryClient.invalidateQueries(["videos"]);
+      setVideoId("");
+      setIsModalOpen2(false);
     },
     onError: () => {
       notify("Error Deleted Videos");
@@ -96,6 +99,10 @@ const Video = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     resetForm();
+  };
+
+  const closeModal2 = () => {
+    setIsModalOpen2(false);
   };
 
   const createOrUpdateVideoHandler = () => {
@@ -125,13 +132,13 @@ const Video = () => {
     }
   };
 
-  const deleteDataHandler = (id) => {
+  const deleteDataHandler = () => {
     const formdata = {
       token: userToken,
-      endpoint: `videos/${id}`,
+      endpoint: `videos/${videoId}`,
     };
 
-    if (id) {
+    if (videoId) {
       deleteVideoMutation.mutate(formdata);
     }
   };
@@ -161,17 +168,32 @@ const Video = () => {
     setEditVideoId(null);
   };
 
+  const handleId = (cid) => {
+    navigator.clipboard
+      .writeText(cid)
+      .then(() => notify("Copied " + cid))
+      .catch((err) => notify("Failed to copy ", err));
+  };
+
   if (isLoading || courseNameLoader) return <Loader />;
   return (
     <div>
       <div className="flex flex-row justify-between mt-10">
         <h2 className="text-2xl">{courseName}</h2>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-primary text-white rounded-md px-10 py-2"
-        >
-          Create Video
-        </button>
+        <div className="flex flex-row gap-3">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-primary text-white rounded-md px-10 py-2"
+          >
+            Create Video
+          </button>
+          <button
+            onClick={() => setIsModalOpen2(true)}
+            className="bg-primary text-white rounded-md px-10 py-2"
+          >
+            Delete Video
+          </button>
+        </div>
       </div>
 
       {isError ? (
@@ -187,8 +209,8 @@ const Video = () => {
               <h4>{item.position}</h4>
               <div className="flex flex-row gap-3">
                 <button onClick={() => editDataHandler(item)}>Edit</button>
-                <button onClick={() => deleteDataHandler(item._id)}>
-                  <RxCross2 />
+                <button onClick={() => handleId(item._id)}>
+                  <FaRegCopy />
                 </button>
               </div>
             </div>
@@ -255,6 +277,22 @@ const Video = () => {
           className="px-10 bg-primary py-2 rounded-md text-white"
         >
           {editMode ? "Update Video" : "Create Video"}
+        </button>
+      </Modal>
+      <Modal isOpen={isModalOpen2} onClose={closeModal2}>
+        <hr className="h-2" />
+        <TextInput
+          onChange={(e) => setVideoId(e.target.value)}
+          value={videoId}
+          label={"Video ID"}
+          type={"text"}
+        />
+        <hr className="h-2" />
+        <button
+          onClick={deleteDataHandler}
+          className="px-10 bg-primary py-2 rounded-md text-white"
+        >
+          Delete
         </button>
       </Modal>
     </div>

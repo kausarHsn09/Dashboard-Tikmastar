@@ -1,5 +1,3 @@
-import React from "react";
-import { MdDelete } from "react-icons/md";
 import { FaRegCopy } from "react-icons/fa";
 import { notify } from "../utils/notify";
 const UserCard = ({ id, name, role, phone }) => {

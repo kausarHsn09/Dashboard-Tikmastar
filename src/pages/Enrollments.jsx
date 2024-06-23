@@ -16,14 +16,14 @@ import { notify } from "../utils/notify";
 const Enrollments = () => {
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState("Pending");
   const userToken = useSelector(selectUserToken);
   const [currentPage, setCurrentPage] = useState(1);
-  const [payStatus, setPayStatus] = useState("");
+  const [payStatus, setPayStatus] = useState("Pending");
   const [enrollementId, setEnrollementId] = useState("");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["enrollments", currentPage],
+    queryKey: ["enrollments",  currentPage, payStatus],
     queryFn: () =>
       getData(
         userToken,
@@ -91,12 +91,32 @@ const Enrollments = () => {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
+ const filter = (value) => {
+  setPayStatus(value);
+  queryClient.invalidateQueries(["enrollments"]); // This will refetch the data immediately
+};
 
   if (isLoading) return <Loader />;
   const enrollmentsdata = data?.data.enrollments;
   return (
     <div>
       <h2 className="text-2xl mt-10">All the Enrollments</h2>
+      <div className="flex flex-row gap-2 mt-3">
+        {options.map((item, i) => (
+          <button
+            className={` ${
+              payStatus === item.value
+                ? "bg-primary text-white"
+                : "bg-secondary"
+            } px-5 rounded-md py-2`}
+            onClick={() => filter(item.value)}
+            key={i}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+
       {enrollmentsdata.map((item, index) => (
         <EnrollmentCard
           setEnrollementId={setEnrollementId}

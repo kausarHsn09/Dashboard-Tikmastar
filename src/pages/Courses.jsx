@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import Modal from "../components/Modal";
 import TextInput from "../components/TextInput";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -10,15 +10,16 @@ import { selectUserToken } from "../features/authSlice";
 import Loader from "../components/Loader";
 import { notify } from "../utils/notify";
 import useCourses from "../hooks/useCourses";
-import { RxCross2 } from "react-icons/rx";
-import { Link } from "react-router-dom";
 
+import { Link } from "react-router-dom";
+import { FaRegCopy } from "react-icons/fa";
 const Courses = () => {
   const queryClient = useQueryClient();
   const userToken = useSelector(selectUserToken);
   const { courseLoader, coursesdata } = useCourses();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
+  const [courseId2, setCourseId2] = useState('');
   //formdata
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -45,6 +46,8 @@ const Courses = () => {
     onSuccess: async () => {
       notify("Course Deleted Successfully");
       queryClient.invalidateQueries(["courses"]);
+      setCourseId2('')
+      setIsModalOpen2(false)
     },
     onError: () => {
       notify("Error Deleted Course");
@@ -71,6 +74,19 @@ const Courses = () => {
     setIsModalOpen(false);
     resetForm();
   };
+  const openModal2 = () => {
+    setIsModalOpen2(true);
+  };
+
+  const closeModal2 = () => {
+    setIsModalOpen2(false);
+  };
+  const handleId = (id) => {
+    navigator.clipboard
+      .writeText(id)
+      .then(() => notify("Copied " + id))
+      .catch((err) => notify("Failed to copy Bkash number: ", err));
+  };
 
   const createCourseHandelar = () => {
     const formdata = {
@@ -93,12 +109,12 @@ const Courses = () => {
     }
   };
 
-  const deleteDataHandelar = (id) => {
+  const deleteDataHandelar = () => {
     const formdata = {
       token: userToken,
-      endpoint: `courses/${id}`,
+      endpoint: `courses/${courseId2}`,
     };
-    if (id) {
+    if (courseId2) {
       deleteCourseMutation.mutate(formdata);
     }
   };
@@ -140,12 +156,21 @@ const Courses = () => {
       <div>
         <div className="flex flex-row justify-between mt-10">
           <h2 className="text-2xl">All the Courses</h2>
-          <button
+          <div className="flex flex-row gap-3">
+            <button
             onClick={openModal}
             className="bg-primary text-white rounded-md px-10 py-2"
           >
             Create Course
           </button>
+          <button
+            onClick={openModal2}
+            className="bg-primary text-white rounded-md px-10 py-2"
+          >
+            Delete
+          </button>
+          </div>
+          
         </div>
         {coursesdata.map((item, index) => (
           <div
@@ -154,8 +179,8 @@ const Courses = () => {
           >
             <h3>{item.title}</h3>
             <h4>{item.price}</h4>
-            <button onClick={() => deleteDataHandelar(item._id)}>
-              <RxCross2 />
+            <button onClick={() => handleId(item._id)}>
+              <FaRegCopy />
             </button>
              
             <Link to={`/course/video/${item._id}`}>
@@ -230,6 +255,21 @@ const Courses = () => {
           {editMode ? "Update Course" : "Create Course"}
         </button>
       </Modal>
+       <Modal isOpen={isModalOpen2} onClose={closeModal2}>
+        <TextInput
+          onChange={(e) => setCourseId2(e.target.value)}
+          value={courseId2}
+          label={"Course Id"}
+          type={"text"}
+        />
+        <hr className="h-2" />
+        <button
+          onClick={() => deleteDataHandelar()}
+          className="px-10 bg-primary py-2 rounded-md text-white"
+        >
+          Delete
+        </button>
+       </Modal>
     </div>
   );
 };
