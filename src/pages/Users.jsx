@@ -122,7 +122,7 @@ const Users = () => {
           id={item._id}
           name={item.name}
           key={index}
-          phone={item.mobileNumber}
+          phone={item.email}
         />
       ))}
       <Modal isOpen={isModalOpen} onClose={closeModal}>

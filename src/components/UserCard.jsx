@@ -28,7 +28,7 @@ const UserCard = ({ id, name, role, phone }) => {
         </div>
       </div>
       <div>
-        <h1 className=" text-primary font-bold">Phone</h1>
+        <h1 className=" text-primary font-bold">Email</h1>
         <h3>{phone}</h3>
       </div>
     </div>
