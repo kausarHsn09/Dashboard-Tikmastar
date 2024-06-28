@@ -93,7 +93,7 @@ const Enrollments = () => {
   };
  const filter = (value) => {
   setPayStatus(value);
-  queryClient.invalidateQueries(["enrollments"]); // This will refetch the data immediately
+  queryClient.invalidateQueries(["enrollments"]); 
 };
 
   if (isLoading) return <Loader />;

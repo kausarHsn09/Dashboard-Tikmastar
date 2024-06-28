@@ -179,21 +179,7 @@ function Sidebar() {
               </p>
             </div>
           </NavLink>
-          <NavLink to="/post" className="py-2">
-            <div className="flex flex-row items-center gap-2	">
-              <MdPostAdd
-                size={22}
-                color={` ${checkActive("/post") ? "#7455F7" : "#262626"}`}
-              />
-              <p
-                className={` ${
-                  checkActive("/post") ? "text-primary" : "text-textdark"
-                }`}
-              >
-                Post
-              </p>
-            </div>
-          </NavLink>
+     
           <NavLink to="/script" className="py-2">
             <div className="flex flex-row items-center gap-2	">
               <TbScript

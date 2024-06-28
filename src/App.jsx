@@ -26,7 +26,6 @@ import Settings from "./pages/Settings";
 import Category from "./pages/Category";
 import Hashtag from "./pages/Hashtag";
 import Caption from "./pages/Caption";
-import Post from "./pages/Post";
 import Script from "./pages/Script";
 
 const App = () => {
@@ -183,16 +182,7 @@ const App = () => {
             </Layout>
           }
         />
-        <Route
-          path="/post"
-          element={
-            <Layout>
-              <ProtectedRoute>
-                <Post />
-              </ProtectedRoute>
-            </Layout>
-          }
-        />
+   
         <Route
           path="/script"
           element={
