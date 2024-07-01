@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Modal from "../components/Modal";
 import TextInput from "../components/TextInput";
 import Hr from "../components/Hr";
@@ -7,6 +7,7 @@ import EnrollmentCard from "../components/EnrollmentCard";
 import { getData } from "../services/getResouces";
 import { updateDataPatch } from "../services/updateDataResources";
 import { deleteData } from "../services/deleteResources";
+import { addData } from "../services/postResources";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { selectUserToken } from "../features/authSlice";
@@ -23,7 +24,7 @@ const Enrollments = () => {
   const [enrollementId, setEnrollementId] = useState("");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["enrollments",  currentPage, payStatus],
+    queryKey: ["enrollments", currentPage, payStatus],
     queryFn: () =>
       getData(
         userToken,
@@ -44,6 +45,18 @@ const Enrollments = () => {
       notify("Payment Status Update Error");
     },
   });
+  const updatePaymentStatusAndReferal = useMutation({
+    mutationFn: addData,
+    onSuccess: async () => {
+      queryClient.invalidateQueries(["enrollments"]);
+      notify("Payment Status Updated");
+      setIsModalOpen(false);
+    },
+    onError: () => {
+      notify("Payment Status Update Error");
+    },
+  });
+
   const deleteEnrollmentMutation = useMutation({
     mutationFn: deleteData,
     onSuccess: async () => {
@@ -64,6 +77,12 @@ const Enrollments = () => {
       },
     });
   };
+  const updatePaymentStatusAndReferalHandler = () => {
+    updatePaymentStatusAndReferal.mutate({
+      token: userToken,
+      endpoint: `enrollments/confirm-payment/${enrollementId}`,
+    });
+  };
   const deleteEnrollmentHandler = () => {
     deleteEnrollmentMutation.mutate({
       token: userToken,
@@ -74,6 +93,10 @@ const Enrollments = () => {
   const options = [
     { value: "Pending", label: "Pending" },
     { value: "Paid", label: "Paid" },
+    { value: "NotAccepted", label: "Not Accepted" },
+  ];
+  const options2 = [
+    { value: "Pending", label: "Pending" },
     { value: "NotAccepted", label: "Not Accepted" },
   ];
   const handleOptionChange = (value) => {
@@ -91,10 +114,10 @@ const Enrollments = () => {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
- const filter = (value) => {
-  setPayStatus(value);
-  queryClient.invalidateQueries(["enrollments"]); 
-};
+  const filter = (value) => {
+    setPayStatus(value);
+    queryClient.invalidateQueries(["enrollments"]);
+  };
 
   if (isLoading) return <Loader />;
   const enrollmentsdata = data?.data.enrollments;
@@ -145,7 +168,7 @@ const Enrollments = () => {
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <SelectField
           label={"Select Status"}
-          options={options}
+          options={options2}
           value={selectedOption}
           onChange={handleOptionChange}
         />
@@ -163,6 +186,12 @@ const Enrollments = () => {
           className="px-10 bg-primary py-2 rounded-md text-white ml-2"
         >
           Delete
+        </button>
+        <button
+          onClick={updatePaymentStatusAndReferalHandler}
+          className="px-10 bg-primary py-2 rounded-md text-white ml-2"
+        >
+          Paid
         </button>
       </Modal>
     </div>

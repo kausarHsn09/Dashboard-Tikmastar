@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Modal from "../components/Modal";
-import { FaRegCopy } from "react-icons/fa";
+
 import SelectField from "../components/SelectField";
 import TextInput from "../components/TextInput";
 import Hr from "../components/Hr";
@@ -16,7 +16,7 @@ import { notify } from "../utils/notify";
 import useCategories from "../hooks/useCategories";
 
 const Caption = () => {
-  const queryClient =useQueryClient()
+  const queryClient = useQueryClient();
   const token = useSelector(selectUserToken);
   const { getCategoriesdata } = useCategories(token);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,25 +37,25 @@ const Caption = () => {
     onError: () => {
       notify("captions Creation Error");
     },
-  })
+  });
 
-  const createhashtagConroller  = ()=>{
+  const createhashtagConroller = () => {
     mutation.mutate({
       token,
       endpoint: "captions",
       data: {
-        category:selectedOption,
+        category: selectedOption,
         text: hashtagText,
       },
     });
-  }
+  };
 
   const deletemutation = useMutation({
     mutationFn: deleteData,
     onSuccess: () => {
       queryClient.invalidateQueries(["captions"]);
       notify("Category deleted successfully");
-     
+
       closeModal();
     },
     onError: () => {
@@ -73,7 +73,6 @@ const Caption = () => {
     }
   };
 
-
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -90,7 +89,7 @@ const Caption = () => {
   const handleOptionChange = (value) => {
     setSelectedOption(value);
   };
-if(hashtagLoader) return <Loader/>
+  if (hashtagLoader) return <Loader />;
   return (
     <div>
       <div className="flex flex-row justify-between mt-10">
@@ -105,9 +104,12 @@ if(hashtagLoader) return <Loader/>
         </div>
       </div>
 
-      {getHashtag?.data.map((item,index) => {
+      {getHashtag?.data.map((item, index) => {
         return (
-          <div key={index} className="bg-white mt-5 drop-shadow-md rounded-md h-[100px] flex flex-row gap-10 px-10 items-center ">
+          <div
+            key={index}
+            className="bg-white mt-5 drop-shadow-md rounded-md h-[100px] flex flex-row gap-10 px-10 items-center "
+          >
             <div className="w-[150px]">
               <h1 className="text-primary font-bold ">Name</h1>
               <h3>{item.text}</h3>
@@ -116,9 +118,7 @@ if(hashtagLoader) return <Loader/>
               <h1 className=" text-primary font-bold">Category</h1>
               <h3>{item.category}</h3>
             </div>
-            <button onClick={()=>deleteHandler(item._id)}>
-             Delete
-            </button>
+            <button onClick={() => deleteHandler(item._id)}>Delete</button>
           </div>
         );
       })}
@@ -131,9 +131,15 @@ if(hashtagLoader) return <Loader/>
           onChange={handleOptionChange}
         />
         <Hr />
-        <TextInput onChange={(e)=>setHashtagText(e.target.value)} label={"Hashtag"} />
+        <TextInput
+          onChange={(e) => setHashtagText(e.target.value)}
+          label={"Hashtag"}
+        />
         <Hr />
-        <button onClick={createhashtagConroller} className="px-10 bg-primary py-2 rounded-md text-white ml-2">
+        <button
+          onClick={createhashtagConroller}
+          className="px-10 bg-primary py-2 rounded-md text-white ml-2"
+        >
           Create Caption
         </button>
       </Modal>

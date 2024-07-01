@@ -30,6 +30,10 @@ const Settings = () => {
   });
 
   const handleSubmit = () => {
+    if (!parcent) {
+      notify("Please enter a percentage");
+      return;
+    }
     updateMutation.mutate({
       token: token,
       endpoint: "settings/referralRewardPercentage",

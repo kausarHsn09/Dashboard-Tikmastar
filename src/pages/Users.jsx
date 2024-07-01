@@ -130,7 +130,7 @@ const Users = () => {
         <Hr />
         <TextInput
           onChange={handlephoneChange}
-          label={"Phone Number"}
+          label={"Email"}
           type={"text"}
         />
         <Hr />
