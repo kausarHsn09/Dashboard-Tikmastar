@@ -102,21 +102,7 @@ function Sidebar() {
             </div>
           </NavLink>
 
-          <NavLink to="/transctions" className="py-2">
-            <div className="flex flex-row items-center gap-2	">
-              <TbZoomMoney
-                size={22}
-                color={` ${checkActive("/transctions") ? "#7455F7" : "#262626"}`}
-              />
-              <p
-                className={` ${
-                  checkActive("/transctions") ? "text-primary" : "text-textdark"
-                }`}
-              >
-                Transctions
-              </p>
-            </div>
-          </NavLink>
+          
 
           <NavLink to="/settings" className="py-2">
             <div className="flex flex-row items-center gap-2	">

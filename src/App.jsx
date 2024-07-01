@@ -21,7 +21,7 @@ import Loader from "./components/Loader";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout"; // Import the new Layout component
 import Withdraw from "./pages/Withdraw";
-import Transctions from "./pages/Transctions";
+
 import Settings from "./pages/Settings";
 import Category from "./pages/Category";
 import Hashtag from "./pages/Hashtag";
@@ -132,16 +132,7 @@ const App = () => {
             </Layout>
           }
         />
-        <Route
-          path="/transctions"
-          element={
-            <Layout>
-              <ProtectedRoute>
-                <Transctions />
-              </ProtectedRoute>
-            </Layout>
-          }
-        />
+        
         <Route
           path="/settings"
           element={
