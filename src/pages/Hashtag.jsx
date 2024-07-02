@@ -22,6 +22,7 @@ const Hashtag = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
   const [hashtagText, setHashtagText] = useState("");
+  const [viewHashtag, setViewHashtag] = useState("");
   const { data: getHashtag, isLoading: hashtagLoader } = useQuery({
     queryKey: ["hashtags"],
     queryFn: () => getData(token, "hashtags"),
@@ -46,6 +47,7 @@ const Hashtag = () => {
       data: {
         category:selectedOption,
         text: hashtagText,
+        view:viewHashtag
       },
     });
   }
@@ -132,6 +134,8 @@ if(hashtagLoader) return <Loader/>
         />
         <Hr />
         <TextInput onChange={(e)=>setHashtagText(e.target.value)} label={"Hashtag"} />
+        <Hr />
+        <TextInput onChange={(e)=>setViewHashtag(e.target.value)} label={"View of Hashtag"} />
         <Hr />
         <button onClick={createhashtagConroller} className="px-10 bg-primary py-2 rounded-md text-white ml-2">
           Create Hashtag
