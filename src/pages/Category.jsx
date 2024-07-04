@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import Modal from "../components/Modal";
 import { FaRegCopy } from "react-icons/fa";
 import TextInput from "../components/TextInput";
@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { selectUserToken } from "../features/authSlice";
 import Loader from "../components/Loader";
 import { notify } from "../utils/notify";
+import { AiOutlineDelete } from "react-icons/ai";
 
 const Category = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -84,7 +85,7 @@ const Category = () => {
   };
 
   const categoryresult = categorydata?.data;
-  console.log(categoryresult)
+  console.log(categoryresult);
   if (isLoading) return <Loader />;
 
   return (
@@ -112,8 +113,8 @@ const Category = () => {
               <h3>{item.name}</h3>
             </div>
 
-            <button onClick={()=>deleteHandler(item._id)}>
-              <FaRegCopy />
+            <button onClick={() => deleteHandler(item._id)}>
+              <AiOutlineDelete />
             </button>
           </div>
         );

@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import  { useState, useEffect } from "react";
 import Modal from "../components/Modal";
-import { FaRegCopy } from "react-icons/fa";
+
 import SelectField from "../components/SelectField";
 import TextInput from "../components/TextInput";
 import Hr from "../components/Hr";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getData } from "../services/getResouces";
+import {getDataWitoutAuth } from "../services/getResouces";
 import { addData } from "../services/postResources";
 import { deleteData } from "../services/deleteResources";
 import { useSelector } from "react-redux";
@@ -16,17 +16,41 @@ import { notify } from "../utils/notify";
 import useCategories from "../hooks/useCategories";
 
 const Hashtag = () => {
-  const queryClient =useQueryClient()
+  const queryClient = useQueryClient();
   const token = useSelector(selectUserToken);
   const { getCategoriesdata } = useCategories(token);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
   const [hashtagText, setHashtagText] = useState("");
   const [viewHashtag, setViewHashtag] = useState("");
-  const { data: getHashtag, isLoading: hashtagLoader } = useQuery({
-    queryKey: ["hashtags"],
-    queryFn: () => getData(token, "hashtags"),
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [hashtags, setHashtags] = useState([]);
+
+  const { data: getCategories, isLoading: categoryLoader } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => getDataWitoutAuth("categories"),
   });
+
+  const { data: getHashtags, isLoading: hashtagsLoader } = useQuery({
+    queryKey: ["hashtags", selectedCategory],
+    queryFn: () =>
+      selectedCategory
+        ? getDataWitoutAuth(`hashtags/category/${selectedCategory}`)
+        : [],
+    enabled: !!selectedCategory,
+  });
+
+  useEffect(() => {
+    if (getCategories && getCategories.data.length > 0) {
+      setSelectedCategory(getCategories.data[0]._id);
+    }
+  }, [getCategories]);
+
+  useEffect(() => {
+    if (getHashtags && getHashtags.data) {
+      setHashtags(getHashtags.data);
+    }
+  }, [getHashtags]);
 
   const mutation = useMutation({
     mutationFn: addData,
@@ -38,26 +62,26 @@ const Hashtag = () => {
     onError: () => {
       notify("Hashtag Creation Error");
     },
-  })
+  });
 
-  const createhashtagConroller  = ()=>{
+  const createhashtagConroller = () => {
     mutation.mutate({
       token,
       endpoint: "hashtags",
       data: {
-        category:selectedOption,
-        text: hashtagText,
-        view:viewHashtag
+        category: selectedOption,
+        text: '#'+hashtagText,
+        view: viewHashtag,
       },
     });
-  }
+  };
 
   const deletemutation = useMutation({
     mutationFn: deleteData,
     onSuccess: () => {
       queryClient.invalidateQueries(["hashtags"]);
       notify("Category deleted successfully");
-     
+
       closeModal();
     },
     onError: () => {
@@ -75,7 +99,6 @@ const Hashtag = () => {
     }
   };
 
-
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -92,7 +115,12 @@ const Hashtag = () => {
   const handleOptionChange = (value) => {
     setSelectedOption(value);
   };
-if(hashtagLoader) return <Loader/>
+    const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+  };
+
+
+  if (hashtagsLoader || categoryLoader) return <Loader />;
   return (
     <div>
       <div className="flex flex-row justify-between mt-10">
@@ -106,21 +134,32 @@ if(hashtagLoader) return <Loader/>
           </button>
         </div>
       </div>
-
-      {getHashtag?.data.map((item,index) => {
+      <div className="flex flex-row gap-5">
+        {getCategories?.data.map((item, index) => (
+          <div key={index} className="flex flex-row gap-2 mt-3">
+            <button
+            onClick={()=>handleCategorySelect(item._id)}
+              className={` ${
+                selectedCategory === item._id ? "bg-primary text-white" : "bg-secondary"
+              } px-5 rounded-md py-2`}
+            >
+               {item.name}
+            </button>
+          </div>
+        ))}
+      </div>
+      {hashtags?.map((item, index) => {
         return (
-          <div key={index} className="bg-white mt-5 drop-shadow-md rounded-md h-[100px] flex flex-row gap-10 px-10 items-center ">
+          <div
+            key={index}
+            className="bg-white mt-5 drop-shadow-md rounded-md h-[100px] flex flex-row gap-10 px-10 items-center "
+          >
             <div className="w-[150px]">
               <h1 className="text-primary font-bold ">Name</h1>
               <h3>{item.text}</h3>
             </div>
-            <div>
-              <h1 className=" text-primary font-bold">Category</h1>
-              <h3>{item.category}</h3>
-            </div>
-            <button onClick={()=>deleteHandler(item._id)}>
-             Delete
-            </button>
+
+            <button onClick={() => deleteHandler(item._id)}>Delete</button>
           </div>
         );
       })}
@@ -133,11 +172,20 @@ if(hashtagLoader) return <Loader/>
           onChange={handleOptionChange}
         />
         <Hr />
-        <TextInput onChange={(e)=>setHashtagText(e.target.value)} label={"Hashtag"} />
+        <TextInput
+          onChange={(e) => setHashtagText(e.target.value)}
+          label={"Hashtag"}
+        />
         <Hr />
-        <TextInput onChange={(e)=>setViewHashtag(e.target.value)} label={"View of Hashtag"} />
+        <TextInput
+          onChange={(e) => setViewHashtag(e.target.value)}
+          label={"View of Hashtag"}
+        />
         <Hr />
-        <button onClick={createhashtagConroller} className="px-10 bg-primary py-2 rounded-md text-white ml-2">
+        <button
+          onClick={createhashtagConroller}
+          className="px-10 bg-primary py-2 rounded-md text-white ml-2"
+        >
           Create Hashtag
         </button>
       </Modal>
