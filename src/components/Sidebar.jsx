@@ -181,6 +181,51 @@ function Sidebar() {
               </p>
             </div>
           </NavLink>
+          <NavLink to="/nickname" className="py-2">
+            <div className="flex flex-row items-center gap-2	">
+              <TbScript
+                size={22}
+                color={` ${checkActive("/nickname") ? "#7455F7" : "#262626"}`}
+              />
+              <p
+                className={` ${
+                  checkActive("/nickname") ? "text-primary" : "text-textdark"
+                }`}
+              >
+                Nickname
+              </p>
+            </div>
+          </NavLink>
+          <NavLink to="/content" className="py-2">
+            <div className="flex flex-row items-center gap-2	">
+              <TbScript
+                size={22}
+                color={` ${checkActive("/content") ? "#7455F7" : "#262626"}`}
+              />
+              <p
+                className={` ${
+                  checkActive("/content") ? "text-primary" : "text-textdark"
+                }`}
+              >
+                Content
+              </p>
+            </div>
+          </NavLink>
+          <NavLink to="/bio" className="py-2">
+            <div className="flex flex-row items-center gap-2	">
+              <TbScript
+                size={22}
+                color={` ${checkActive("/bio") ? "#7455F7" : "#262626"}`}
+              />
+              <p
+                className={` ${
+                  checkActive("/bio") ? "text-primary" : "text-textdark"
+                }`}
+              >
+                Bio
+              </p>
+            </div>
+          </NavLink>
         </nav>
       </div>
 

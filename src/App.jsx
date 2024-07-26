@@ -28,6 +28,10 @@ import Hashtag from "./pages/Hashtag";
 import Caption from "./pages/Caption";
 import Script from "./pages/Script";
 
+import Bio from "./pages/Bio";
+import NickName from "./pages/NickName";
+import Content from "./pages/Content";
+
 const App = () => {
   const userToken = useSelector(selectUserToken);
   const dispatch = useDispatch();
@@ -180,6 +184,36 @@ const App = () => {
             <Layout>
               <ProtectedRoute>
                 <Script />
+              </ProtectedRoute>
+            </Layout>
+          }
+        />
+        <Route
+          path="/bio"
+          element={
+            <Layout>
+              <ProtectedRoute>
+                <Bio />
+              </ProtectedRoute>
+            </Layout>
+          }
+        />
+        <Route
+          path="/content"
+          element={
+            <Layout>
+              <ProtectedRoute>
+                <Content />
+              </ProtectedRoute>
+            </Layout>
+          }
+        />
+        <Route
+          path="/nickname"
+          element={
+            <Layout>
+              <ProtectedRoute>
+                <NickName />
               </ProtectedRoute>
             </Layout>
           }
