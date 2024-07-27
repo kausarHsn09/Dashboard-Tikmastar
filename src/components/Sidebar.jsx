@@ -8,6 +8,11 @@ import { TbZoomMoney,TbCategory,TbScript } from "react-icons/tb";
 import { HiHashtag } from "react-icons/hi";
 import { FaRegClosedCaptioning } from "react-icons/fa6";
 import { MdPostAdd } from "react-icons/md";
+import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
+import { MdOutlineContentPaste } from "react-icons/md";
+import { BiObjectsHorizontalRight } from "react-icons/bi";
+import { FaRegCompass } from "react-icons/fa";
+import { BiRun } from "react-icons/bi";
 
 
 import { useDispatch } from "react-redux";
@@ -61,6 +66,21 @@ function Sidebar() {
                 }`}
               >
                 Enrollments
+              </p>
+            </div>
+          </NavLink>
+          <NavLink to="/challenge" className="py-2">
+            <div className="flex flex-row items-center gap-2	">
+              <BiRun
+                size={22}
+                color={` ${checkActive("/challenge") ? "#7455F7" : "#262626"}`}
+              />
+              <p
+                className={` ${
+                  checkActive("/challenge") ? "text-primary" : "text-textdark"
+                }`}
+              >
+                Challenge
               </p>
             </div>
           </NavLink>
@@ -172,6 +192,8 @@ function Sidebar() {
                 size={22}
                 color={` ${checkActive("/script") ? "#7455F7" : "#262626"}`}
               />
+
+              
               <p
                 className={` ${
                   checkActive("/script") ? "text-primary" : "text-textdark"
@@ -183,7 +205,7 @@ function Sidebar() {
           </NavLink>
           <NavLink to="/nickname" className="py-2">
             <div className="flex flex-row items-center gap-2	">
-              <TbScript
+              <MdOutlineDriveFileRenameOutline
                 size={22}
                 color={` ${checkActive("/nickname") ? "#7455F7" : "#262626"}`}
               />
@@ -198,7 +220,7 @@ function Sidebar() {
           </NavLink>
           <NavLink to="/content" className="py-2">
             <div className="flex flex-row items-center gap-2	">
-              <TbScript
+              <MdOutlineContentPaste
                 size={22}
                 color={` ${checkActive("/content") ? "#7455F7" : "#262626"}`}
               />
@@ -213,7 +235,7 @@ function Sidebar() {
           </NavLink>
           <NavLink to="/bio" className="py-2">
             <div className="flex flex-row items-center gap-2	">
-              <TbScript
+              <BiObjectsHorizontalRight
                 size={22}
                 color={` ${checkActive("/bio") ? "#7455F7" : "#262626"}`}
               />
@@ -226,6 +248,7 @@ function Sidebar() {
               </p>
             </div>
           </NavLink>
+          
         </nav>
       </div>
 

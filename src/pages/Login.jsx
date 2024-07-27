@@ -36,7 +36,7 @@ const Login = () => {
 
   const loginHandler = () => {
     const formData = {
-      mobileNumber: mobile,
+      email: mobile,
       password: password,
     };
     loginMutation.mutate(formData);

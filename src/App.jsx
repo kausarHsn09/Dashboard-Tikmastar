@@ -31,6 +31,8 @@ import Script from "./pages/Script";
 import Bio from "./pages/Bio";
 import NickName from "./pages/NickName";
 import Content from "./pages/Content";
+import Challenge from "./pages/Challenge";
+import Submissions from './pages/Submissions' 
 
 const App = () => {
   const userToken = useSelector(selectUserToken);
@@ -209,11 +211,31 @@ const App = () => {
           }
         />
         <Route
+          path="/challenge"
+          element={
+            <Layout>
+              <ProtectedRoute>
+                <Challenge />
+              </ProtectedRoute>
+            </Layout>
+          }
+        />
+        <Route
           path="/nickname"
           element={
             <Layout>
               <ProtectedRoute>
                 <NickName />
+              </ProtectedRoute>
+            </Layout>
+          }
+        />
+        <Route
+          path="/submissions/:id"
+          element={
+            <Layout>
+              <ProtectedRoute>
+                <Submissions />
               </ProtectedRoute>
             </Layout>
           }
