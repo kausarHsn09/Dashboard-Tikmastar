@@ -139,7 +139,7 @@ function Sidebar() {
               </p>
             </div>
           </NavLink>
-
+         <p className="text-xs text-slate-600	 font-normal py-4">Content</p>
           <NavLink to="/category" className="py-2">
             <div className="flex flex-row items-center gap-2	">
               <TbCategory
