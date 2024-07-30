@@ -4,10 +4,6 @@ import { formatter } from "../utils/formatter";
 
 const SettingsCard = ({parcent,setParcent,getParcent,onClick}) => {
   
-
-
-
- 
   return (
     <div className="flex flex-row drop-shadow-md  bg-white rounded-xl justify-between py-5 px-10 mt-5">
       <div className="flex flex-row justify-between gap-10">

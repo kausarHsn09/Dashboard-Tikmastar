@@ -1,21 +1,63 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getData } from "../services/getResouces";
+import { getData, getDataWitoutAuth } from "../services/getResouces";
 import { selectUserToken } from "../features/authSlice";
 import { useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import { notify } from "../utils/notify";
 import { updateData } from "../services/updateDataResources";
 import SettingsCard from "../components/SettingsCard";
-
+import TextInput from "../components/TextInput";
+import Hr from "../components/Hr";
 const Settings = () => {
   const [parcent, setParcent] = useState("");
+  const [utilkey, setUtilKey] = useState("");
+  const [utilIndex, setUtilIndex] = useState("");
+  const [utilsID,setUtilsID] =useState('')
   const queryClient = useQueryClient();
   const token = useSelector(selectUserToken);
   const { data, isLoading } = useQuery({
     queryKey: ["getReferralRewardPercentage"],
-    queryFn: () => getData(token, "settings/referralRewardPercentage"),
+    queryFn: () => getData(token, "settings/referralRewardPercentage")
   });
+  const { data: utilsdata, isLoading: utilLoader } = useQuery({
+    queryKey: ["utils"],
+    queryFn: () => getDataWitoutAuth("utils?type=contact"),
+  });
+
+  useEffect(() => {
+    if (utilsdata) {
+      setUtilsID(utilsdata?.data[0]?._id);
+    }
+  }, []);
+
+  const utilsMutation = useMutation({
+    mutationFn: updateData,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["utils"]);
+      notify("utils updated successfully");
+      setParcent("");
+    },
+    onError: () => {
+      notify("Failed to update");
+    },
+  });
+
+  const handleUpdateutils = () => {
+    if (!utilkey && !utilIndex) {
+      notify("Please enter a Index");
+      return;
+    }
+    utilsMutation.mutate({
+      token: token,
+      endpoint: `utils/${utilsID}`,
+      data: {
+        [utilkey]: utilIndex,
+      },
+    });
+
+  };
+
 
   const updateMutation = useMutation({
     mutationFn: updateData,
@@ -44,6 +86,8 @@ const Settings = () => {
   };
 
   const getParcentdata = data?.data;
+  const getutilsdata = utilsdata?.data;
+  
   if (isLoading) return <Loader />;
 
   return (
@@ -58,6 +102,37 @@ const Settings = () => {
         setParcent={setParcent}
         onClick={handleSubmit}
       />
+      {/* Utils */}
+      <div className="flex flex-row drop-shadow-md  bg-white rounded-xl justify-between py-5 px-10 mt-5">
+        <div>
+          {getutilsdata.map((item, i) => (
+            <div key={i} className="flex flex-row gap-3">
+              <h1 className=" text-primary font-bold">merchantBkash </h1>
+              <h3>{item.merchantBkash}</h3>
+              <h1 className=" text-primary font-bold">contactNumber </h1>
+              <h3>{item.contactNumber}</h3>
+              <h1 className=" text-primary font-bold">contactText </h1>
+              <h3>{item.contactText}</h3>
+             
+            </div>
+          ))}
+         <Hr gap={10}/>
+         <div className="flex flex-row justify-between items-center">
+           <div className="flex flex-row gap-5">
+            <TextInput value={utilkey} label={'Key'} onChange={(e)=>setUtilKey(e.target.value)}/>
+              
+            <TextInput value={utilIndex} label={'Value'} onChange={(e)=>setUtilIndex(e.target.value)}/>
+          </div>
+
+          <button
+        onClick={handleUpdateutils}
+       className="px-10 bg-primary py-2 h-10 rounded-md text-white ml-2"
+      >
+       Update
+      </button>
+         </div>
+        </div>
+      </div>
     </div>
   );
 };
