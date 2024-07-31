@@ -26,10 +26,10 @@ const Settings = () => {
   });
 
   useEffect(() => {
-    if (utilsdata) {
+   
       setUtilsID(utilsdata?.data[0]?._id);
-    }
-  }, []);
+    
+  }, [utilsdata?.data]);
 
   const utilsMutation = useMutation({
     mutationFn: updateData,
@@ -128,7 +128,7 @@ const Settings = () => {
         onClick={handleUpdateutils}
        className="px-10 bg-primary py-2 h-10 rounded-md text-white ml-2"
       >
-       Update
+       Update utils
       </button>
          </div>
         </div>

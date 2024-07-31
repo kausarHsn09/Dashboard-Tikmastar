@@ -57,7 +57,7 @@ const Users = () => {
       endpoint: "users",
       data: {
         name,
-        mobileNumber: phone,
+        phone,
         password,
       },
     });
@@ -122,7 +122,7 @@ const Users = () => {
           id={item._id}
           name={item.name}
           key={index}
-          phone={item.email}
+          phone={item.phone}
         />
       ))}
       <Modal isOpen={isModalOpen} onClose={closeModal}>
