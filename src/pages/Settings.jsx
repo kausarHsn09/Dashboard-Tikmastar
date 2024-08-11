@@ -16,11 +16,11 @@ const Settings = () => {
   const [utilsID,setUtilsID] =useState('')
   const queryClient = useQueryClient();
   const token = useSelector(selectUserToken);
-  const { data, isLoading } = useQuery({
+  const { data, isLoading,isError:referralError } = useQuery({
     queryKey: ["getReferralRewardPercentage"],
     queryFn: () => getData(token, "settings/referralRewardPercentage")
   });
-  const { data: utilsdata, isLoading: utilLoader } = useQuery({
+  const { data: utilsdata, isLoading: utilLoader ,isError } = useQuery({
     queryKey: ["utils"],
     queryFn: () => getDataWitoutAuth("utils?type=contact"),
   });
@@ -87,9 +87,8 @@ const Settings = () => {
 
   const getParcentdata = data?.data;
   const getutilsdata = utilsdata?.data;
-  
+  if (referralError || isError) return <p>Error fetching data: {referralError.message}</p>;
   if (isLoading) return <Loader />;
-
   return (
     <div>
       <div className="flex flex-row justify-between mt-10">

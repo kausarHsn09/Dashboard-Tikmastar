@@ -20,6 +20,7 @@ const Courses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [courseId2, setCourseId2] = useState('');
+
   //formdata
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -29,7 +30,8 @@ const Courses = () => {
   const [coverImg, setCoverImg] = useState("");
   const [courseId, setCourseId] = useState("");
   const [editMode, setEditMode] = useState(false);
-
+  const [author, setAuthor] = useState('')
+  
   const createCourseMutation = useMutation({
     mutationFn: addData,
     onSuccess: async () => {
@@ -99,10 +101,11 @@ const Courses = () => {
         enrollmentCount: enrollment,
         stars: stars,
         coverImage: coverImg,
+        author
       },
     };
 
-    if (title && description && price && stars && coverImg) {
+    if (title && description && price && stars && coverImg && author) {
       createCourseMutation.mutate(formdata);
       setIsModalOpen(false);
       resetForm();
@@ -130,6 +133,7 @@ const Courses = () => {
         enrollmentCount: enrollment,
         stars,
         coverImage: coverImg,
+        author
       },
     };
 
@@ -245,6 +249,13 @@ const Courses = () => {
           onChange={(e) => setCoverImg(e.target.value)}
           value={coverImg}
           label={"Cover Image"}
+          type={"text"}
+        />
+        <hr className="h-2" />
+        <TextInput
+          onChange={(e) => setAuthor(e.target.value)}
+          value={author}
+          label={"Author"}
           type={"text"}
         />
         <hr className="h-5" />
