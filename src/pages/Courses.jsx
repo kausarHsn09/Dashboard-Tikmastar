@@ -127,11 +127,11 @@ const Courses = () => {
       token: userToken,
       endpoint: `courses/${courseId}`,
       data: {
-        title,
-        description,
-        price,
+        title: title,
+        description: description,
+        price: price,
         enrollmentCount: enrollment,
-        stars,
+        stars: stars,
         coverImage: coverImg,
         author
       },
@@ -150,9 +150,11 @@ const Courses = () => {
     setEnrollment(0);
     setStars(0);
     setCoverImg("");
+    setAuthor('')
     setEditMode(false)
   };
-
+ console.log(coverImg)
+ console.log(author)
   if (courseLoader) return <Loader />;
 
   return (
@@ -200,6 +202,7 @@ const Courses = () => {
                 setStars(item.stars);
                 setCoverImg(item.coverImage);
                 setCourseId(item._id);
+                setAuthor(item.author)
                 setEditMode(true)
                 openModal();
               }}

@@ -6,7 +6,7 @@ import TextInput from "../components/TextInput";
 import Hr from "../components/Hr";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {getDataWitoutAuth } from "../services/getResouces";
+import {getData } from "../services/getResouces";
 import { addData } from "../services/postResources";
 import { deleteData } from "../services/deleteResources";
 import { useSelector } from "react-redux";
@@ -28,14 +28,14 @@ const Hashtag = () => {
 
   const { data: getCategories, isLoading: categoryLoader } = useQuery({
     queryKey: ["categories"],
-    queryFn: () => getDataWitoutAuth("categories"),
+    queryFn: () => getData(token,"categories"),
   });
 
   const { data: getHashtags, isLoading: hashtagsLoader } = useQuery({
     queryKey: ["hashtags", selectedCategory],
     queryFn: () =>
       selectedCategory
-        ? getDataWitoutAuth(`hashtags/category/${selectedCategory}`)
+        ? getData(token,`hashtags/category/${selectedCategory}`)
         : [],
     enabled: !!selectedCategory,
   });
