@@ -22,7 +22,7 @@ const Settings = () => {
   });
   const { data: utilsdata, isLoading: utilLoader ,isError } = useQuery({
     queryKey: ["utils"],
-    queryFn: () => getDataWitoutAuth("utils?type=contact"),
+    queryFn: () => getData(token,"utils?type=contact"),
   });
 
   useEffect(() => {
