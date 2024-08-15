@@ -16,7 +16,7 @@ const Challenge = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setdescription] = useState("");
-
+  const [coverImage, setCoverImage] = useState('')
   const queryClient = useQueryClient();
   const token = useSelector(selectUserToken);
 
@@ -44,6 +44,7 @@ const Challenge = () => {
       data: {
         title,
         description,
+        coverImage
       },
     });
   };
@@ -128,6 +129,11 @@ const Challenge = () => {
           onChange={(e) => setdescription(e.target.value)}
           label={"description"}
           value={description}
+        />
+        <TextInput
+          onChange={(e) => setCoverImage(e.target.value)}
+          label={"Cover Image"}
+          value={coverImage}
         />
         <Hr />
         <button

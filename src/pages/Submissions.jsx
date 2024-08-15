@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { getData } from "../services/getResouces";
 import { selectUserToken } from "../features/authSlice";
 import Loader from "../components/Loader";
-import { CiLocationArrow1 } from "react-icons/ci";
+
 import { FaRegCopy } from "react-icons/fa";
 import { notify } from "../utils/notify";
 import { formatter } from "../utils/formatter";
