@@ -21,6 +21,7 @@ const Enrollments = () => {
   const userToken = useSelector(selectUserToken);
   const [currentPage, setCurrentPage] = useState(1);
   const [payStatus, setPayStatus] = useState("Pending");
+  const [enrollmentMessage, setEnrollmentMessage] = useState('Pending');
   const [enrollementId, setEnrollementId] = useState("");
 
   const { data, isLoading } = useQuery({
@@ -74,6 +75,7 @@ const Enrollments = () => {
       endpoint: `enrollments/${enrollementId}`,
       data: {
         paymentStatus: selectedOption,
+        message:enrollmentMessage
       },
     });
   };
@@ -173,7 +175,9 @@ const Enrollments = () => {
           onChange={handleOptionChange}
         />
         <Hr />
-        <TextInput label={"Message"} />
+        <TextInput  onChange={(e) => setEnrollmentMessage(e.target.value)}
+          label={"Message"}
+          value={enrollmentMessage} />
         <Hr gap={10} />
         <button
           onClick={updatePaymentStatusHandler}

@@ -30,7 +30,7 @@ const Users = () => {
   const createUserMutation = useMutation({
     mutationFn: addData,
     onSuccess: () => {
-      queryClient.invalidateQueries(["users"]);
+      queryClient.invalidateQueries({ queryKey: ["users"] });
       setIsModalOpen(false);
       notify("User created Successfully");
     },
@@ -41,12 +41,13 @@ const Users = () => {
   const deleteUserMutation = useMutation({
     mutationFn: deleteData,
     onSuccess: () => {
-      queryClient.invalidateQueries(["users"]);
+      queryClient.invalidateQueries({ queryKey: ["users"] });
       setIsModalOpen2(false);
       notify("User deleted Successfully");
     },
     onError: (e) => {
       notify(e.response.data.message);
+     
     },
   });
 
@@ -130,7 +131,7 @@ const Users = () => {
         <Hr />
         <TextInput
           onChange={handlephoneChange}
-          label={"Email"}
+          label={"Phone"}
           type={"text"}
         />
         <Hr />

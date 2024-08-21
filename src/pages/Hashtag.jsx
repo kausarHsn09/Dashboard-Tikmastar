@@ -134,7 +134,7 @@ const Hashtag = () => {
           </button>
         </div>
       </div>
-      <div className="flex flex-row gap-5">
+      <div className="flex flex-row  gap-x-5 flex-wrap">
         {getCategories?.data.map((item, index) => (
           <div key={index} className="flex flex-row gap-2 mt-3">
             <button
