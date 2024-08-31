@@ -1,6 +1,6 @@
 import { FaRegCopy } from "react-icons/fa";
 import { notify } from "../utils/notify";
-const UserCard = ({ id, name, role, phone }) => {
+const UserCard = ({ id, name, phone,usename,refer,refercount,userType }) => {
   const handleId = () => {
     navigator.clipboard
       .writeText(id)
@@ -15,8 +15,8 @@ const UserCard = ({ id, name, role, phone }) => {
         <h3>{name}</h3>
       </div>
       <div>
-        <h1 className=" text-primary font-bold">Role</h1>
-        <h3>{role}</h3>
+        <h1 className=" text-primary font-bold">UserName</h1>
+        <h3>{usename}</h3>
       </div>
       <div>
         <h1 className=" text-primary font-bold">User ID</h1>
@@ -28,8 +28,20 @@ const UserCard = ({ id, name, role, phone }) => {
         </div>
       </div>
       <div>
-        <h1 className=" text-primary font-bold">Email</h1>
+        <h1 className=" text-primary font-bold">Phone</h1>
         <h3>{phone}</h3>
+      </div>
+      <div>
+        <h1 className=" text-primary font-bold">Refer</h1>
+        <h3>{refer}</h3>
+      </div>
+      <div>
+        <h1 className=" text-primary font-bold">Refer count</h1>
+        <h3>{refercount}</h3>
+      </div>
+      <div>
+        <h1 className=" text-primary font-bold">User Type</h1>
+        <h3>{userType}</h3>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UserCard from "../components/UserCard";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getData } from "../services/getResouces";
@@ -6,11 +6,11 @@ import { addData } from "../services/postResources";
 import { deleteData } from "../services/deleteResources";
 import { useSelector } from "react-redux";
 import { selectUserToken } from "../features/authSlice";
-import Loader from "../components/Loader";
 import Modal from "../components/Modal";
 import { notify } from "../utils/notify";
 import TextInput from "../components/TextInput";
 import Hr from "../components/Hr";
+import SelectField from "../components/SelectField";
 
 const Users = () => {
   const queryClient = useQueryClient();
@@ -22,15 +22,38 @@ const Users = () => {
   const [password, setPassword] = useState("");
   const [userId, setUserId] = useState("");
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["users"],
-    queryFn: () => getData(token, "users"),
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
+  const [triggerSearch, setTriggerSearch] = useState(false); // To trigger re-fetching
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["findUser", selectedOption, searchValue],
+    queryFn: () =>
+      getData(token, `users/find-user?${selectedOption}=${searchValue}`),
+    enabled: triggerSearch,
   });
+
+  const handleSearch = () => {
+    if (selectedOption && searchValue) {
+      setTriggerSearch(true); // Trigger the query
+    } else {
+      notify("Please enter a search type and value");
+    }
+  };
+
+  // Reactively handle side effects
+  useEffect(() => {
+    if (!isLoading) {
+      setTriggerSearch(false); // Reset trigger when loading is done
+      
+    }
+  }, [isLoading, error]);
+
 
   const createUserMutation = useMutation({
     mutationFn: addData,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["finduser"] });
       setIsModalOpen(false);
       notify("User created Successfully");
     },
@@ -47,7 +70,6 @@ const Users = () => {
     },
     onError: (e) => {
       notify(e.response.data.message);
-     
     },
   });
 
@@ -95,7 +117,13 @@ const Users = () => {
     setPhone(e.target.value);
   };
 
-  if (isLoading) return <Loader />;
+  const searchType = [
+    { value: "username", label: "Username" },
+    { value: "phone", label: "Phone" },
+    { value: "id", label: "Id" },
+  ];
+
+  // if (isLoading) return <Loader />;
 
   return (
     <div>
@@ -117,23 +145,42 @@ const Users = () => {
         </div>
       </div>
 
-      {data?.data.map((item, index) => (
-        <UserCard
-          role={item.role}
-          id={item._id}
-          name={item.name}
-          key={index}
-          phone={item.phone}
+      <div className="bg-white mt-5 drop-shadow-md rounded-md h-[100px] flex flex-row gap-10 px-10 items-center justify-center">
+        <h1 className="text-primary font-bold ">Search By</h1>
+        <SelectField
+          options={searchType}
+          selectedOption={selectedOption}
+          onChange={(value) => setSelectedOption(value)}
         />
-      ))}
+        <div >
+          <TextInput
+            onChange={(e) => setSearchValue(e.target.value)}
+            type={"text"}
+            value={searchValue}
+          />
+        </div>
+        <button
+          onClick={handleSearch}
+          className="px-10 bg-primary py-2 rounded-md text-white ml-2"
+        >
+          Search
+        </button>
+      </div>
+
+      <UserCard
+        id={data?.data._id}
+        name={data?.data.name}
+        usename={data?.data.username}
+        phone={data?.data.phone}
+        userType={data?.data.userType}
+        refer={data?.data.referralCode}
+        refercount={data?.data.referralCount}
+      />
+
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <TextInput onChange={handlenameChange} label={"Name"} type={"text"} />
         <Hr />
-        <TextInput
-          onChange={handlephoneChange}
-          label={"Phone"}
-          type={"text"}
-        />
+        <TextInput onChange={handlephoneChange} label={"Phone"} type={"text"} />
         <Hr />
         <TextInput
           onChange={handlepasswordChange}
