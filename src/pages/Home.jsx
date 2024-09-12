@@ -13,7 +13,22 @@ const Home = () => {
     queryKey: ["analytics"],
     queryFn: () => getData(token, "dashboard/stats"),
   });
+
+  function formatNumber(num) {
+    if (num >= 1000000000) {
+        return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'b';
+    }
+    if (num >= 1000000) {
+        return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'm';
+    }
+    if (num >= 1000) {
+        return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+    }
+    return num.toString();
+}
+
   const analytics = getAnalytics?.data
+  console.log(analytics)
    if(loader) return <Loader />
   return (
     <div>
@@ -21,16 +36,17 @@ const Home = () => {
       <div className='w-full flex justify-start items-center '>
         <div className='mt-10 grid grid-cols-2 gap-5 justify-center items-center'>
         <div className='col-span-1'>
-          <AnalyticsCard title='Total Users' number={analytics.totalUsers}/>
+          <AnalyticsCard title='Total Users' number={formatNumber(analytics.totalUsers)}/>
+         
         </div>
         <div className='col-span-1'>
-          <AnalyticsCard title='Enrolled' number={analytics.totalPaidEnrollments}/>
+          <AnalyticsCard title='Enrolled' number={formatNumber(analytics.totalPaidEnrollments)}/>
         </div>
         <div className='col-span-1'>
-          <AnalyticsCard title='Total Earning' number={analytics.totalEarnings}/>
+          <AnalyticsCard title='Total Earning' number={"৳"+formatNumber(analytics.totalEarnings)}/>
         </div>
         <div className='col-span-1'>
-          <AnalyticsCard title='Total Referral Money' number={analytics.totalReferralMoney}/>
+          <AnalyticsCard title='Total Referral Money' number={formatNumber(analytics.totalReferralMoney)}/>
         </div>
       </div>
       </div>

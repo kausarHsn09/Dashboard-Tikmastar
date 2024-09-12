@@ -110,14 +110,14 @@ const Script = () => {
         return (
           <div
             key={index}
-            className="bg-white mt-5 drop-shadow-md rounded-md h-[100px] flex flex-row gap-10 px-10 items-center "
+            className="bg-white py-10  mt-5 drop-shadow-md rounded-md  flex flex-row gap-10 px-10 items-center "
           >
-            <div className="w-[150px]">
+            <div className="flex-2">
               <h1 className="text-primary font-bold ">Name</h1>
               <h3>{item.text}</h3>
             </div>
             <div>
-              <h1 className=" text-primary font-bold">Category</h1>
+              <h1 className="flex-1 text-primary font-bold">Category</h1>
               <h3>{item.category}</h3>
             </div>
             <button onClick={() => deleteHandler(item._id)}>Delete</button>
