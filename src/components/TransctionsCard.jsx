@@ -2,7 +2,7 @@ import { CiLocationArrow1 } from "react-icons/ci";
 
 import { formatter } from "../utils/formatter";
 
-const TransctionsCard = ({ openModal,User="user",Ammount='ammount',Type='debit',Dates,setid,id,notes }) => {
+const TransctionsCard = ({ openModal,User="user",Ammount='ammount',Type='debit',Dates,setid,id,notes,number }) => {
   
   
   const handelar=()=>{
@@ -29,6 +29,10 @@ const TransctionsCard = ({ openModal,User="user",Ammount='ammount',Type='debit',
         <div>
           <h1 className=" text-primary font-bold">Date</h1>
           <h3>{formatter.format(new Date(Dates))}</h3>
+        </div>
+        <div>
+          <h1 className=" text-primary font-bold">Number</h1>
+          <h3>{number}</h3>
         </div>
         {notes && (
           <div>

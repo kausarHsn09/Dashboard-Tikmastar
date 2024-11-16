@@ -33,7 +33,7 @@ const Withdraw = () => {
         }`
       ),
   });
-
+console.log(data?.data)
   const approveWithdrawMutation = useMutation({
     mutationFn: updateDataPatch,
     onSuccess: async () => {
@@ -123,7 +123,8 @@ const Withdraw = () => {
           User={item.user}
           Ammount={item.amount}
           Dates={item.createdAt}
-          Type={item.type}
+          number={item.accountNumber}
+          Type={item.type} 
           key={index}
           id={item._id}
           notes={item.notes}

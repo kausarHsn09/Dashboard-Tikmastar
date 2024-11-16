@@ -26,6 +26,9 @@ const Users = () => {
   const [searchValue, setSearchValue] = useState("");
   const [triggerSearch, setTriggerSearch] = useState(false); // To trigger re-fetching
 
+  const [useKey, setUserKey] = useState("");
+  const [useValue, setUserValue] = useState("");
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["findUser", selectedOption, searchValue],
     queryFn: () =>
@@ -45,10 +48,8 @@ const Users = () => {
   useEffect(() => {
     if (!isLoading) {
       setTriggerSearch(false); // Reset trigger when loading is done
-      
     }
   }, [isLoading, error]);
-
 
   const createUserMutation = useMutation({
     mutationFn: addData,
@@ -61,6 +62,18 @@ const Users = () => {
       notify(e.response.data.message);
     },
   });
+
+  const updateUserMutation = useMutation({
+    mutationFn: addData,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["finduser"] });
+      notify("User Update Successfully");
+    },
+    onError: (e) => {
+      notify(e.response.data.message);
+    },
+  });
+
   const deleteUserMutation = useMutation({
     mutationFn: deleteData,
     onSuccess: () => {
@@ -92,6 +105,17 @@ const Users = () => {
     });
   };
 
+  const updateUserHandler = () => {
+    if (!data?.data.id) return;
+    updateUserMutation.mutate({
+      token,
+      endpoint: `users/edit-user/${data?.data.id}`,
+      data: {
+        [useKey]: useValue,
+      },
+    });
+  };
+
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -118,6 +142,7 @@ const Users = () => {
   };
 
   const searchType = [
+    { value: "", label: "Please Select" },
     { value: "username", label: "Username" },
     { value: "phone", label: "Phone" },
     { value: "id", label: "Id" },
@@ -147,12 +172,14 @@ const Users = () => {
 
       <div className="bg-white mt-5 drop-shadow-md rounded-md h-[100px] flex flex-row gap-10 px-10 items-center justify-center">
         <h1 className="text-primary font-bold ">Search By</h1>
-        <SelectField
+        <div className="flex-1">
+          <SelectField
           options={searchType}
           selectedOption={selectedOption}
           onChange={(value) => setSelectedOption(value)}
         />
-        <div >
+        </div>
+        <div className="flex-1">
           <TextInput
             onChange={(e) => setSearchValue(e.target.value)}
             type={"text"}
@@ -166,8 +193,8 @@ const Users = () => {
           Search
         </button>
       </div>
-
-      <UserCard
+      {data?.data && (
+        <UserCard
         id={data?.data._id}
         name={data?.data.name}
         usename={data?.data.username}
@@ -175,7 +202,33 @@ const Users = () => {
         userType={data?.data.userType}
         refer={data?.data.referralCode}
         refercount={data?.data.referralCount}
+        balance={data?.data.balance}
+        role={data?.data.role}
       />
+      )
+      }
+      
+      <Hr gap={10} />
+
+      <TextInput
+        onChange={(e) => setUserKey(e.target.value)}
+        label={"Key"}
+        type={"text"}
+      />
+      <Hr />
+      <TextInput
+        onChange={(e) => setUserValue(e.target.value)}
+        label={"Value"}
+        type={"text"}
+      />
+
+      <Hr gap={10} />
+      <button
+        onClick={updateUserHandler}
+        className="px-10 bg-primary py-2 rounded-md text-white ml-2"
+      >
+        Update
+      </button>
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <TextInput onChange={handlenameChange} label={"Name"} type={"text"} />

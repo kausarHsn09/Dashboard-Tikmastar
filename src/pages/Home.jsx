@@ -28,7 +28,7 @@ const Home = () => {
 }
 
   const analytics = getAnalytics?.data
-  console.log(analytics)
+  
    if(loader) return <Loader />
   return (
     <div>

@@ -104,7 +104,7 @@ const Settings = () => {
       {/* Utils */}
       <div className="flex flex-row drop-shadow-md  bg-white rounded-xl justify-between py-5 px-10 mt-5">
         <div>
-          {getutilsdata.map((item, i) => (
+          {getutilsdata?.map((item, i) => (
             <div key={i} className="flex flex-row gap-3">
               <h1 className=" text-primary font-bold">merchantBkash </h1>
               <h3>{item.merchantBkash}</h3>
