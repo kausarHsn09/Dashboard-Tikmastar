@@ -28,8 +28,8 @@ const Login = () => {
       dispatch(setToken(token));
       notify("Login successful");
     },
-    onError: () => {
-      console.log("login failed");
+    onError: (e) => {
+      console.log("login failed",e);
       notify("Login Error");
     },
   });
