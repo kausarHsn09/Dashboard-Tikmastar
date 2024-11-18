@@ -105,7 +105,8 @@ const Settings = () => {
       <div className="flex flex-row drop-shadow-md  bg-white rounded-xl justify-between py-5 px-10 mt-5">
         <div>
           {getutilsdata?.map((item, i) => (
-            <div key={i} className="flex flex-row gap-3">
+            <div  key={i}>
+            <div  className="flex flex-row gap-3">
               <h1 className=" text-primary font-bold">merchantBkash </h1>
               <h3>{item.merchantBkash}</h3>
               <h1 className=" text-primary font-bold">contactNumber </h1>
@@ -113,6 +114,17 @@ const Settings = () => {
               <h1 className=" text-primary font-bold">contactText </h1>
               <h3>{item.contactText}</h3>
              
+             
+            </div>
+         <div className="flex flex-row gap-3">
+           <h1 className=" text-primary font-bold">merchantLabel </h1>
+              <h3>{item.merchantLabel}</h3>
+              <h1 className=" text-primary font-bold">coureseInstructionUrl </h1>
+              <h3>{item.coureseInstructionUrl}</h3>
+              <h1 className=" text-primary font-bold">telegramLink </h1>
+              <h3>{item.telegramLink}</h3>
+         </div>
+
             </div>
           ))}
          <Hr gap={10}/>
